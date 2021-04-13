@@ -9,5 +9,5 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
 def originalImages():
-    print("Hello")
+    print("Read Nifti Images")
     # Take original images in

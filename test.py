@@ -9,11 +9,13 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
 def userFile():
-    print("Hello")
+    print("User Inserts File")
+    #	file = filedialog.askopenfilename() #Ask for a file
+	#	print(file)
     # Allow user to insert a Nifti Image
 
 #Segment the userFile
 
 def prediction():
-    print("Hello")
+    print("Prediction")
 	# Insert prediction code here
