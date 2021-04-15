@@ -1,6 +1,7 @@
 #Import Scripts
 import test
 import train
+import segment
 
 #Import Needed Libraries
 import tkinter as tk
@@ -30,6 +31,10 @@ class CovidGUI:
 		self.menubar.add_cascade(label="Show Accuracy", menu=showAccuracy)
 		showAccuracy.add_command(label="Accuracy Graph",command=train.accuracy)
 		showAccuracy.add_command(label="Loss Graph",command=train.loss)
+
+		segmentLung = tk.Menu(self.menubar,tearoff=0)
+		self.menubar.add_cascade(label="Segment Lung", menu=segmentLung)
+		segmentLung.add_command(label="Segment",command=segment.originalImages)
 
 		# Exit menu
 		exitMenu = tk.Menu(self.menubar,tearoff=0) #Add exit to menubar
