@@ -7,6 +7,7 @@ import segment
 import tkinter as tk
 from tkinter import simpledialog
 from tkinter import messagebox
+from PIL import ImageTk, Image
 
 #Class for CovidGUI
 class CovidGUI:
@@ -14,13 +15,26 @@ class CovidGUI:
 	def __init__(self): # Initialise Tkinter window app
 		self.root = tk.Tk()
 		self.root.title("CovidGUI") #Name the window
-		#self.root.geometry('500x200') #Size the window
+		self.root.geometry('500x200') #Size the window
+		#Full Screen Below
 		#self.root.overrideredirect(True)
-		self.root.geometry("{0}x{1}+0+0".format(self.root.winfo_screenwidth(), self.root.winfo_screenheight()))
+		#self.root.geometry("{0}x{1}+0+0".format(self.root.winfo_screenwidth(), self.root.winfo_screenheight()))
 		self._create_menubar() #Run create menubar function
+		self.image_bck() #Run image background function
+
+	def image_bck(self): #Create background image
+		image1 = Image.open("backgroundHolder.jpg") #Import image
+		image1 = image1.resize((500,200), Image.ANTIALIAS) #Resize image to match window size
+		bck = ImageTk.PhotoImage(image1) #Create a photo image
+
+		label1 = tk.Label(image=bck) #Add image to a label
+		label1.image = bck
+
+		label1.grid(column=0,row=0) # Position label
+
 
 	def _create_menubar(self):
-		self.menubar = tk.Menu(self.root,foreground='white', activebackground='#0B3D54', activeforeground='white')
+		self.menubar = tk.Menu(self.root)
 		self.root.configure(menu=self.menubar)
 
 		predictCovid = tk.Menu(self.menubar,tearoff=0)
