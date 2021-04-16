@@ -1,7 +1,7 @@
 #Import Scripts
 import test
 import train
-import segment
+import segmentOne
 
 #Import Needed Libraries
 import tkinter as tk
@@ -48,7 +48,7 @@ class CovidGUI:
 
 		segmentLung = tk.Menu(self.menubar,tearoff=0)
 		self.menubar.add_cascade(label="Segment Lung", menu=segmentLung)
-		segmentLung.add_command(label="Segment",command=segment.originalImages)
+		segmentLung.add_command(label="Segment",command=segmentOne.originalImages)
 
 		# Exit menu
 		exitMenu = tk.Menu(self.menubar,tearoff=0) #Add exit to menubar

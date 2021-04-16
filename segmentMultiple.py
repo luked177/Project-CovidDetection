@@ -1,11 +1,15 @@
 # Import Libraries
-import numpy as np # linear algebra
-import scipy.ndimage as ndimage
-import matplotlib.pyplot as plt
-import nibabel as nib
-from skimage import measure, morphology, segmentation
 import tkinter as tk
 from tkinter import filedialog
+import os
+
+import matplotlib.pyplot as plt
+import nibabel as nib
+from nibabel.testing import data_path
+import numpy as np  # linear algebra
+import scipy.ndimage as ndimage
+from skimage import measure, morphology, segmentation
+
 print("Libraries Imported")
 
 def generate_markers(image):
@@ -43,7 +47,7 @@ def seperate_lungs(image):
     sobel_gradient *= 255.0 / np.max(sobel_gradient)
     
     #Watershed algorithm
-    watershed = morphology.watershed(sobel_gradient, marker_watershed)
+    watershed = segmentation.watershed(sobel_gradient, marker_watershed)
     
     #Reducing the image created by the Watershed algorithm to its outline
     outline = ndimage.morphological_gradient(watershed, size=(3,3))
@@ -74,69 +78,80 @@ def seperate_lungs(image):
     return segmented, lungfilter, outline, watershed, sobel_gradient, marker_internal, marker_external, marker_watershed
 
 def originalImages():
-    ori_img = filedialog.askopenfilename()
-    print(ori_img)
+    path = filedialog.askdirectory()
+    lungCTs = os.listdir(path)
+    #length = len(lungCTs)
+    #segmentedLungs = {}
+    #print(length)
 
-    img = nib.load(ori_img)
-    # GET F DATA
-    data = img.get_fdata()
+    for filename in lungCTs:
+        lungCTScan = os.path.join(path, filename)
+        img = nib.load(lungCTScan)
+        # GET F DATA
+        data = img.get_fdata()
 
-    slice_0 = data[:,:,135]
+        shape = data.shape
+        lengthSlices = shape[2]
+            
+        slice_0 = data[:,:,135]
 
-    image = np.stack([slice_0])
-    image = image.astype(np.int16)
+        image = np.stack([slice_0])
+        image = image.astype(np.int16)
 
-    image[image == -2000] = 30
+        image[image == -2000] = 30
 
-    intercept = 1
-    image += np.int16(intercept)
+        intercept = 1
+        image += np.int16(intercept)
 
-    testPatientImages = np.array(image, dtype=np.int16)
+        testPatientImages = np.array(image, dtype=np.int16)
 
-    testPatientImages = np.squeeze(testPatientImages)
+        testPatientImages = np.squeeze(testPatientImages)
 
-    #Show some example markers from the middle        
-    test_patient_internal, test_patient_external, test_patient_watershed = generate_markers(testPatientImages)
+        #Show some example markers from the middle        
+        test_patient_internal, test_patient_external, test_patient_watershed = generate_markers(testPatientImages)
 
-    #Some Testcode:
-    test_segmented, test_lungfilter, test_outline, test_watershed, test_sobel_gradient, test_marker_internal, test_marker_external, test_marker_watershed = seperate_lungs(testPatientImages)
+        #Some Testcode:
+        test_segmented, test_lungfilter, test_outline, test_watershed, test_sobel_gradient, test_marker_internal, test_marker_external, test_marker_watershed = seperate_lungs(testPatientImages)
 
-    fig, axs = plt.subplots(3,3)
-    axs[0,0].axis('off')
-    axs[0,0].grid(b=None)
-    axs[0,0].imshow(testPatientImages, cmap='gray')
-    axs[0,0].set_title("Original Slice")
-    axs[0,1].axis('off')
-    axs[0,1].grid(b=None)
-    axs[0,1].imshow(test_patient_internal, cmap='gray')
-    axs[0,1].set_title("Internal Marker")
-    axs[0,2].axis('off')
-    axs[0,2].grid(b=None)
-    axs[0,2].imshow(test_patient_external, cmap='gray')
-    axs[0,2].set_title("External Marker")
-    axs[1,0].axis('off')
-    axs[1,0].grid(b=None)
-    axs[1,0].imshow(test_patient_watershed, cmap='gray')
-    axs[1,0].set_title("Watershed Marker")
-    axs[1,1].axis('off')
-    axs[1,1].grid(b=None)
-    axs[1,1].imshow(test_sobel_gradient, cmap='gray')
-    axs[1,1].set_title("Sobel Gradient")
-    axs[1,2].axis('off')
-    axs[1,2].grid(b=None)
-    axs[1,2].imshow(test_watershed, cmap='gray')
-    axs[1,2].set_title("Watershed Image")
-    axs[2,0].axis('off')
-    axs[2,0].grid(b=None)
-    axs[2,0].imshow(test_outline, cmap='gray')
-    axs[2,0].set_title("Outline after reinclusion")
-    axs[2,1].axis('off')
-    axs[2,1].grid(b=None)
-    axs[2,1].imshow(test_lungfilter, cmap='gray')
-    axs[2,1].set_title("Lungfilter after closing")
-    axs[2,2].axis('off')
-    axs[2,2].grid(b=None)
-    axs[2,2].imshow(test_segmented, cmap='gray')
-    axs[2,2].set_title("Segmented Slice")
-    fig.tight_layout()
-    fig.show()
+        fig, axs = plt.subplots(3,3)
+        axs[0,0].axis('off')
+        axs[0,0].grid(b=None)
+        axs[0,0].imshow(testPatientImages, cmap='gray')
+        axs[0,0].set_title("Original Slice")
+        axs[0,1].axis('off')
+        axs[0,1].grid(b=None)
+        axs[0,1].imshow(test_patient_internal, cmap='gray')
+        axs[0,1].set_title("Internal Marker")
+        axs[0,2].axis('off')
+        axs[0,2].grid(b=None)
+        axs[0,2].imshow(test_patient_external, cmap='gray')
+        axs[0,2].set_title("External Marker")
+        axs[1,0].axis('off')
+        axs[1,0].grid(b=None)
+        axs[1,0].imshow(test_patient_watershed, cmap='gray')
+        axs[1,0].set_title("Watershed Marker")
+        axs[1,1].axis('off')
+        axs[1,1].grid(b=None)
+        axs[1,1].imshow(test_sobel_gradient, cmap='gray')
+        axs[1,1].set_title("Sobel Gradient")
+        axs[1,2].axis('off')
+        axs[1,2].grid(b=None)
+        axs[1,2].imshow(test_watershed, cmap='gray')
+        axs[1,2].set_title("Watershed Image")
+        axs[2,0].axis('off')
+        axs[2,0].grid(b=None)
+        axs[2,0].imshow(test_outline, cmap='gray')
+        axs[2,0].set_title("Outline after reinclusion")
+        axs[2,1].axis('off')
+        axs[2,1].grid(b=None)
+        axs[2,1].imshow(test_lungfilter, cmap='gray')
+        axs[2,1].set_title("Lungfilter after closing")
+        axs[2,2].axis('off')
+        axs[2,2].grid(b=None)
+        axs[2,2].imshow(test_segmented, cmap='gray')
+        axs[2,2].set_title("Segmented Slice")
+        fig.tight_layout()
+        fig.show()
+
+        
+        #segmentedLungs["lung{0}".format(filename)] = test_segmented

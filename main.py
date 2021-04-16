@@ -1,5 +1,5 @@
 #Import scripts
-import segment
+import segmentOne
 import train
 import test
 import gui
