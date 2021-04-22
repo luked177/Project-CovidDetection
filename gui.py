@@ -49,7 +49,8 @@ class CovidGUI:
 
 		segmentLung = tk.Menu(self.menubar,tearoff=0)
 		self.menubar.add_cascade(label="Segment Lung", menu=segmentLung)
-		segmentLung.add_command(label="Segment",command=segmentMultiple.originalImages)
+		segmentLung.add_command(label="Segment One",command=segmentOne.originalImages)
+		segmentLung.add_command(label="Segment Directory & Save",command=segmentMultiple.originalImages)
 
 		# Exit menu
 		exitMenu = tk.Menu(self.menubar,tearoff=0) #Add exit to menubar

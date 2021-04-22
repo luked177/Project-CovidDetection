@@ -1,7 +1,6 @@
 # Import Libraries
 import tkinter as tk
 from tkinter import filedialog
-from PIL import Image
 import pathlib
 import matplotlib.pyplot as plt
 import nibabel as nib
@@ -28,6 +27,7 @@ def generate_markers(image):
 	external_a = ndimage.binary_dilation(marker_internal, iterations=10)
 	external_b = ndimage.binary_dilation(marker_internal, iterations=55)
 	marker_external = external_b ^ external_a
+
 	#Creation of the Watershed Marker matrix
 	marker_watershed = np.zeros((512, 512), dtype=np.int)
 	marker_watershed += marker_internal * 255
@@ -76,7 +76,7 @@ def seperate_lungs(image):
 	
 	return segmented, lungfilter, outline, watershed, sobel_gradient, marker_internal, marker_external, marker_watershed
 
-def showSegmentation(testPatientImages,test_patient_internal,test_patient_external,test_patient_watershed,test_sobel_gradient,test_watershed,test_outline,test_lungfilter,test_segmented):
+def showSegmentation(sliceNum,testPatientImages,test_patient_internal,test_patient_external,test_patient_watershed,test_sobel_gradient,test_watershed,test_outline,test_lungfilter,test_segmented):
 	fig, axs = plt.subplots(3,3)
 	axs[0,0].axis('off')
 	axs[0,0].grid(b=None)
@@ -115,6 +115,7 @@ def showSegmentation(testPatientImages,test_patient_internal,test_patient_extern
 	axs[2,2].imshow(test_segmented, cmap='gray')
 	axs[2,2].set_title("Segmented Slice")
 	fig.tight_layout()
+	fig.canvas.set_window_title(f'Slice {sliceNum}') 
 	fig.show()
 	#fig.savefig(r'C:\Users\luked\Documents\GitHub\Project-CovidDetection\segmentFigure.png')
 
@@ -127,11 +128,12 @@ def originalImages():
 
 	shape = data.shape
 	lengthSlices = shape[2]
-	x = lengthSlices/2
-	x = int(round(x,0))
 
-	for j in range(3):
-		slice_0 = data[:,:,x]
+	x = list(range(0, lengthSlices))
+	y = x[int(len(x) * .1) : int(len(x) * .90)]
+
+	for j in range(lengthSlices):
+		slice_0 = data[:,:,y[j]]
 
 		image = np.stack([slice_0])
 		image = image.astype(np.int16)
@@ -151,12 +153,11 @@ def originalImages():
 		#Some Testcode:
 		test_segmented, test_lungfilter, test_outline, test_watershed, test_sobel_gradient, test_marker_internal, test_marker_external, test_marker_watershed = seperate_lungs(testPatientImages)
 
-		#showSegmentation(testPatientImages,test_patient_internal,test_patient_external,test_patient_watershed,test_sobel_gradient,test_watershed,test_outline,test_lungfilter,test_segmented)
+		showSegmentation(y[j],testPatientImages,test_patient_internal,test_patient_external,test_patient_watershed,test_sobel_gradient,test_watershed,test_outline,test_lungfilter,test_segmented)
 
-		affine = img.affine
-		path1 = f"C:\\Users\\luked\\Documents\\GitHub\\Project-CovidDetection\\SavedSegmentation\\{j}"
+		#affine = img.affine
+		#path1 = f"C:\\Users\\luked\\Documents\\GitHub\\Project-CovidDetection\\SavedSegmentation\\{j}"
 		#print(path1)
-		savedFile = nib.Nifti1Image(test_segmented, affine)
-		savedFile.to_filename(path1 + '.nii.gz')
+		#savedFile = nib.Nifti1Image(test_segmented, affine)
+		#savedFile.to_filename(path1 + '.nii.gz')
 		print("Segmented Lung")
-		x = x + 10
