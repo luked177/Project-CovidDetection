@@ -116,6 +116,7 @@ def showSegmentation(testPatientImages,test_patient_internal,test_patient_extern
 	axs[2,2].imshow(test_segmented, cmap='gray')
 	axs[2,2].set_title("Segmented Slice")
 	fig.tight_layout()
+	fig.canvas.set_window_title(f'Slice {sliceNum}') 
 	fig.show()
 	#fig.savefig(r'C:\Users\luked\Documents\GitHub\Project-CovidDetection\segmentFigure.png')
 
@@ -133,11 +134,13 @@ def originalImages():
 
 			shape = data.shape
 			lengthSlices = shape[2]
-			x = lengthSlices/2
-			x = int(round(x,0))
+
+			x = list(range(0, lengthSlices))
+			y = x[int(len(x) * .3) : int(len(x) * .7)]
+			yLength = len(y)
 			
-			for j in range(3):
-				slice_0 = data[:,:,x]
+			for j in range(yLength):
+				slice_0 = data[:,:,y[j]]
 
 				image = np.stack([slice_0])
 				image = image.astype(np.int16)
@@ -160,11 +163,10 @@ def originalImages():
 				#showSegmentation(testPatientImages,test_patient_internal,test_patient_external,test_patient_watershed,test_sobel_gradient,test_watershed,test_outline,test_lungfilter,test_segmented)
 
 				affine = img.affine
-				path1 = f"C:\\Users\\luked\\Documents\\GitHub\\Project-CovidDetection\\SavedSegmentation\\{i}-{j}"
+				path1 = f"C:\\Users\\luked\\Documents\\GitHub\\Project-CovidDetection\\SavedSegmentation\\SegmentedCovid\\scan{i}-slice{j}covid"
 				savedFile = nib.Nifti1Image(test_segmented, affine)
 				savedFile.to_filename(path1 + '.nii.gz')
 				print("Segmented Lung")
-				x = x + 10
 			i = i + 1
 		except IndexError:
 			print("Index Error")

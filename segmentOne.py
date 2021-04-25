@@ -130,9 +130,10 @@ def originalImages():
 	lengthSlices = shape[2]
 
 	x = list(range(0, lengthSlices))
-	y = x[int(len(x) * .1) : int(len(x) * .90)]
+	y = x[int(len(x) * .3) : int(len(x) * .7)]
+	yLength = len(y)
 
-	for j in range(lengthSlices):
+	for j in range(yLength):
 		slice_0 = data[:,:,y[j]]
 
 		image = np.stack([slice_0])
