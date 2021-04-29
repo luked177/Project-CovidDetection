@@ -162,7 +162,7 @@ def originalImages():
 	
 	affine = img.affine
 	header = img.header
-	path1 = f"C:\\Users\\luked\\Documents\\GitHub\\Project-CovidDetection\\SavedNiftiArray\\testSlice"
+	path1 = "SavedNiftiArray\\testSlice"
 	#print(path1)
 	niftiArray = np.array(niftiArray)
 	niftiArray = niftiArray.transpose((-1, 0, 1))

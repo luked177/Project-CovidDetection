@@ -168,7 +168,7 @@ def originalImages():
 
 			affine = img.affine
 			header = img.header
-			path1 = f"C:\\Users\\luked\\Documents\\GitHub\\Project-CovidDetection\\SegmentedHealthyNifti\\segmentedNiftiHealthy{i}"
+			path1 = f"SegmentedCovidNifti\\segmentedNiftiCovid{i}"
 			#print(path1)
 			niftiArray = np.array(niftiArray)
 			niftiArray = niftiArray.transpose((-1, 0, 1))
