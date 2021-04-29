@@ -133,6 +133,8 @@ def originalImages():
 	y = x[int(len(x) * .3) : int(len(x) * .7)]
 	yLength = len(y)
 
+	niftiArray = []
+
 	for j in range(yLength):
 		slice_0 = data[:,:,y[j]]
 
@@ -154,11 +156,17 @@ def originalImages():
 		#Some Testcode:
 		test_segmented, test_lungfilter, test_outline, test_watershed, test_sobel_gradient, test_marker_internal, test_marker_external, test_marker_watershed = seperate_lungs(testPatientImages)
 
-		showSegmentation(y[j],testPatientImages,test_patient_internal,test_patient_external,test_patient_watershed,test_sobel_gradient,test_watershed,test_outline,test_lungfilter,test_segmented)
+		#showSegmentation(y[j],testPatientImages,test_patient_internal,test_patient_external,test_patient_watershed,test_sobel_gradient,test_watershed,test_outline,test_lungfilter,test_segmented)
 
-		#affine = img.affine
-		#path1 = f"C:\\Users\\luked\\Documents\\GitHub\\Project-CovidDetection\\SavedSegmentation\\{j}"
-		#print(path1)
-		#savedFile = nib.Nifti1Image(test_segmented, affine)
-		#savedFile.to_filename(path1 + '.nii.gz')
-		print("Segmented Lung")
+		niftiArray.append(test_segmented)
+	
+	affine = img.affine
+	header = img.header
+	path1 = f"C:\\Users\\luked\\Documents\\GitHub\\Project-CovidDetection\\SavedNiftiArray\\testSlice"
+	#print(path1)
+	niftiArray = np.array(niftiArray)
+	niftiArray = niftiArray.transpose((-1, 0, 1))
+	niftiArray = niftiArray.transpose((-1, 0, 1))   
+	savedFile = nib.Nifti1Image(niftiArray, affine, header)
+	savedFile.to_filename(path1 + '.nii.gz')
+	print("Segmented Lung")
