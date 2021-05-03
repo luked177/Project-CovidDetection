@@ -1,13 +1,13 @@
 # Import Libraries
+import os
 import tkinter as tk
 from tkinter import filedialog
-import os
 
 import matplotlib.pyplot as plt
 import nibabel as nib
-from nibabel.testing import data_path
 import numpy as np  # linear algebra
 import scipy.ndimage as ndimage
+from nibabel.testing import data_path
 from skimage import measure, morphology, segmentation
 
 print("Libraries Imported")
@@ -123,7 +123,7 @@ def showSegmentation(testPatientImages,test_patient_internal,test_patient_extern
 def originalImages():
 	path = filedialog.askdirectory()
 	lungCTs = os.listdir(path)
-	i = 0
+	i = 170
 
 	for filename in lungCTs:
 		try:
@@ -168,7 +168,7 @@ def originalImages():
 
 			affine = img.affine
 			header = img.header
-			path1 = f"SegmentedCovidNifti\\segmentedNiftiCovid{i}"
+			path1 = f"SegmentedNiftiCovid\\segmentedNiftiCovid{i}"
 			#print(path1)
 			niftiArray = np.array(niftiArray)
 			niftiArray = niftiArray.transpose((-1, 0, 1))

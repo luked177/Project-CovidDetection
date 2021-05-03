@@ -1,7 +1,8 @@
 # Import Libraries
+import pathlib
 import tkinter as tk
 from tkinter import filedialog
-import pathlib
+
 import matplotlib.pyplot as plt
 import nibabel as nib
 import numpy as np  # linear algebra
@@ -170,3 +171,53 @@ def originalImages():
 	savedFile = nib.Nifti1Image(niftiArray, affine, header)
 	savedFile.to_filename(path1 + '.nii.gz')
 	print("Segmented Lung")
+
+def segmentationForPredict(ori_img):
+	img = nib.load(ori_img)
+	# GET F DATA
+	data = img.get_fdata()
+
+	shape = data.shape
+	lengthSlices = shape[2]
+
+	x = list(range(0, lengthSlices))
+	y = x[int(len(x) * .3) : int(len(x) * .7)]
+	yLength = len(y)
+
+	niftiArray = []
+
+	for j in range(yLength):
+		slice_0 = data[:,:,y[j]]
+
+		image = np.stack([slice_0])
+		image = image.astype(np.int16)
+
+		image[image == -2000] = 30
+
+		intercept = 1
+		image += np.int16(intercept)
+
+		testPatientImages = np.array(image, dtype=np.int16)
+
+		testPatientImages = np.squeeze(testPatientImages)
+
+		#Show some example markers from the middle        
+		test_patient_internal, test_patient_external, test_patient_watershed = generate_markers(testPatientImages)
+
+		#Some Testcode:
+		test_segmented, test_lungfilter, test_outline, test_watershed, test_sobel_gradient, test_marker_internal, test_marker_external, test_marker_watershed = seperate_lungs(testPatientImages)
+
+		#showSegmentation(y[j],testPatientImages,test_patient_internal,test_patient_external,test_patient_watershed,test_sobel_gradient,test_watershed,test_outline,test_lungfilter,test_segmented)
+
+		niftiArray.append(test_segmented)
+	
+	affine = img.affine
+	header = img.header
+	path1 = "segmentedSlice"
+	niftiArray = np.array(niftiArray)
+	niftiArray = niftiArray.transpose((-1, 0, 1))
+	niftiArray = niftiArray.transpose((-1, 0, 1))   
+	segmentedNifti = nib.Nifti1Image(niftiArray, affine, header)
+	segmentedNifti.to_filename(path1 + '.nii.gz')
+	print("Segmented Lung")
+	return segmentedNifti

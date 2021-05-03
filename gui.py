@@ -1,14 +1,15 @@
 #Import Scripts
 import test
-import train
-import segmentOne
-import segmentMultiple
-
 #Import Needed Libraries
 import tkinter as tk
-from tkinter import simpledialog
-from tkinter import messagebox
-from PIL import ImageTk, Image
+from tkinter import messagebox, simpledialog
+
+from PIL import Image, ImageTk
+
+import modelInfo
+import segmentMultiple
+import segmentOne
+
 
 #Class for CovidGUI
 class CovidGUI:
@@ -17,14 +18,11 @@ class CovidGUI:
 		self.root = tk.Tk()
 		self.root.title("CovidGUI") #Name the window
 		self.root.geometry('500x200') #Size the window
-		#Full Screen Below
-		#self.root.overrideredirect(True)
-		#self.root.geometry("{0}x{1}+0+0".format(self.root.winfo_screenwidth(), self.root.winfo_screenheight()))
 		self._create_menubar() #Run create menubar function
 		self.image_bck() #Run image background function
 
 	def image_bck(self): #Create background image
-		image1 = Image.open("backgroundHolder.jpg") #Import image
+		image1 = Image.open("background.png") #Import image
 		image1 = image1.resize((500,200), Image.ANTIALIAS) #Resize image to match window size
 		bck = ImageTk.PhotoImage(image1) #Create a photo image
 
@@ -40,12 +38,14 @@ class CovidGUI:
 
 		predictCovid = tk.Menu(self.menubar,tearoff=0)
 		self.menubar.add_cascade(label="Predict Covid", menu=predictCovid)
-		predictCovid.add_command(label="Insert Image",command=test.prediction)
+		predictCovid.add_command(label="Insert Raw Image",command=test.prediction)
+		predictCovid.add_command(label="Insert Segmented Image",command=test.predictionSegmented)
 
 		showAccuracy = tk.Menu(self.menubar,tearoff=0)
-		self.menubar.add_cascade(label="Show Accuracy", menu=showAccuracy)
-		showAccuracy.add_command(label="Accuracy Graph",command=train.accuracy)
-		showAccuracy.add_command(label="Loss Graph",command=train.loss)
+		self.menubar.add_cascade(label="Model Info", menu=showAccuracy)
+		showAccuracy.add_command(label="Model Summary",command=modelInfo.summary)
+		showAccuracy.add_command(label="Accuracy Graph",command=modelInfo.accuracy)
+		showAccuracy.add_command(label="Loss Graph",command=modelInfo.loss)
 
 		segmentLung = tk.Menu(self.menubar,tearoff=0)
 		self.menubar.add_cascade(label="Segment Lung", menu=segmentLung)
