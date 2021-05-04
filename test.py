@@ -9,6 +9,8 @@ import tensorflow as tf
 from scipy import ndimage
 from tensorflow import keras
 
+import matplotlib.pyplot as plt
+
 import segmentOne
 
 
@@ -84,15 +86,21 @@ def prediction():
     path = 'segmentedSlice.nii.gz'
     predictScan = process_scan(path)
 
+    sliceImg = predictScan[:,:,32]
+
     prediction = model.predict(np.expand_dims(predictScan, axis=0))
     scores = [1 - prediction[0], prediction[0]]
 
-    class_names = ["normal", "abnormal"]
+    class_names = ["infected", "non-infected"]
     for score, name in zip(scores, class_names):
         print(
             "This model is %.2f percent confident that CT scan is %s"
             % ((100 * score), name)
         )
+
+    plt.imshow(sliceImg, cmap='gray')
+    plt.title("This model is %.2f percent confident that CT scan is %s \n This model is %.2f percent confident that CT scan is %s" % ((100 * scores[0], class_names[0],100 * scores[1], class_names[1])))
+    plt.show()
 
 def predictionSegmented():
     print("PredictionSegmentation")
@@ -102,13 +110,19 @@ def predictionSegmented():
     predictScan = filedialog.askopenfilename()
     predictScan = process_scan(predictScan)
 
+    sliceImg = predictScan[:,:,32]
+
     prediction = model.predict(np.expand_dims(predictScan, axis=0))
     scores = [1 - prediction[0], prediction[0]]
 
-    class_names = ["normal", "abnormal"]
+    class_names = ["infected", "non-infected"]
     for score, name in zip(scores, class_names):
         print(
             "This model is %.2f percent confident that CT scan is %s"
             % ((100 * score), name)
         )
+    
+    plt.imshow(sliceImg, cmap='gray')
+    plt.title("This model is %.2f percent confident that CT scan is %s \n This model is %.2f percent confident that CT scan is %s" % ((100 * scores[0], class_names[0],100 * scores[1], class_names[1])))
+    plt.show()
 
