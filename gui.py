@@ -7,8 +7,7 @@ from tkinter import messagebox, simpledialog
 from PIL import Image, ImageTk
 
 import modelInfo
-import segmentMultiple
-import segmentOne
+import segmentation
 
 
 #Class for CovidGUI
@@ -49,8 +48,8 @@ class CovidGUI:
 
 		segmentLung = tk.Menu(self.menubar,tearoff=0)
 		self.menubar.add_cascade(label="Segment Lung", menu=segmentLung)
-		segmentLung.add_command(label="Segment One",command=segmentOne.originalImages)
-		segmentLung.add_command(label="Segment Directory & Save",command=segmentMultiple.originalImages)
+		segmentLung.add_command(label="Segment One",command=segmentation.singleSegmentation)
+		segmentLung.add_command(label="Segment Directory & Save",command=segmentation.multipleSegmentation)
 
 		# Exit menu
 		exitMenu = tk.Menu(self.menubar,tearoff=0) #Add exit to menubar

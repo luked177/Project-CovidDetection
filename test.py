@@ -11,7 +11,7 @@ from tensorflow import keras
 
 import matplotlib.pyplot as plt
 
-import segmentOne
+import segmentation
 
 
 def read_nifti_file(filepath):
@@ -82,7 +82,7 @@ def prediction():
     model.load_weights("ModelWeights\\CovidWeights.h5")
 
     predictScan = filedialog.askopenfilename()
-    segmentOne.segmentationForPredict(predictScan)
+    segmentation.segmentationForPredict(predictScan)
     path = 'segmentedSlice.nii.gz'
     predictScan = process_scan(path)
 
