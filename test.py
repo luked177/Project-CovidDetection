@@ -91,7 +91,7 @@ def prediction():
     prediction = model.predict(np.expand_dims(predictScan, axis=0))
     scores = [1 - prediction[0], prediction[0]]
 
-    class_names = ["infected", "non-infected"]
+    class_names = ["non-infected", "infected"]
     for score, name in zip(scores, class_names):
         print(
             "This model is %.2f percent confident that CT scan is %s"
@@ -115,7 +115,7 @@ def predictionSegmented():
     prediction = model.predict(np.expand_dims(predictScan, axis=0))
     scores = [1 - prediction[0], prediction[0]]
 
-    class_names = ["infected", "non-infected"]
+    class_names = ["non-infected", "infected"]
     for score, name in zip(scores, class_names):
         print(
             "This model is %.2f percent confident that CT scan is %s"
