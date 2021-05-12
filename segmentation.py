@@ -126,7 +126,7 @@ def showSegmentation(sliceNum,testPatientImages,test_patient_internal,test_patie
 def multipleSegmentation():
 	path = filedialog.askdirectory()
 	lungCTs = os.listdir(path)
-	i = 170
+	i = 0
 
 	for filename in lungCTs:
 		try:
