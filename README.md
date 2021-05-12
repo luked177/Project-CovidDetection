@@ -6,3 +6,6 @@ This project outlines the results of implementing a deep neural network known as
 To use the program, first download the sourcecode and open the folder in the terminal. From here, run the command pip install -r requirements.txt. This will install all needed dependencies for the code to function. 
 
 Now just using python, run the command python3 main.py, and the GUI will open.
+
+In order to train the model, open a Colab notebook and copy the segmentedfull3dclassiifcation.py file into the notebook. The MosMed data set is required in your google drive before attempting to train the model. The link for that is here https://mosmed.ai/datasets/covid19_1110/
+
