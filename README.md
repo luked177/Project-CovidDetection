@@ -7,5 +7,5 @@ To use the program, first download the sourcecode and open the folder in the ter
 
 Now just using python, run the command python3 main.py, and the GUI will open.
 
-In order to train the model, open a Colab notebook and copy the segmentedfull3dclassiifcation.py file into the notebook. The MosMed data set is required in your google drive before attempting to train the model. The link for that is here https://mosmed.ai/datasets/covid19_1110/
+In order to train the model, download the 3DClassifier.ipynb file and open it in google colab. Remember to switch to a high RAM GPU runtime. The MosMed data set is required in your google drive before attempting to train the model. The link for that is here https://mosmed.ai/datasets/covid19_1110/
 
