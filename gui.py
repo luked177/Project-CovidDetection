@@ -31,25 +31,25 @@ class CovidGUI:
 		label1.grid(column=0,row=0) # Position label
 
 
-	def _create_menubar(self):
+	def _create_menubar(self): # Create menu bar
 		self.menubar = tk.Menu(self.root)
-		self.root.configure(menu=self.menubar)
+		self.root.configure(menu=self.menubar) # Initialise menu bar
 
-		predictCovid = tk.Menu(self.menubar,tearoff=0)
+		predictCovid = tk.Menu(self.menubar,tearoff=0) # Add the predict covid tab to menu bar
 		self.menubar.add_cascade(label="Predict Covid", menu=predictCovid)
-		predictCovid.add_command(label="Insert Raw Image",command=test.prediction)
-		predictCovid.add_command(label="Insert Segmented Image",command=test.predictionSegmented)
+		predictCovid.add_command(label="Insert Raw Image",command=test.prediction) #Add ability to segment a lung image before making a prediction
+		predictCovid.add_command(label="Insert Segmented Image",command=test.predictionSegmented) # Make a prediction on an already segmented lung
 
-		showAccuracy = tk.Menu(self.menubar,tearoff=0)
-		self.menubar.add_cascade(label="Model Info", menu=showAccuracy)
-		showAccuracy.add_command(label="Model Summary",command=modelInfo.summary)
-		showAccuracy.add_command(label="Accuracy Graph",command=modelInfo.accuracy)
-		showAccuracy.add_command(label="Loss Graph",command=modelInfo.loss)
+		showAccuracy = tk.Menu(self.menubar,tearoff=0) 
+		self.menubar.add_cascade(label="Model Info", menu=showAccuracy) #Add the model info tab
+		showAccuracy.add_command(label="Model Summary",command=modelInfo.summary) # Show a model summary
+		showAccuracy.add_command(label="Accuracy Graph",command=modelInfo.accuracy)# Show an accuracy graph
+		showAccuracy.add_command(label="Loss Graph",command=modelInfo.loss) # Show a loss graph
 
 		segmentLung = tk.Menu(self.menubar,tearoff=0)
-		self.menubar.add_cascade(label="Segment Lung", menu=segmentLung)
-		segmentLung.add_command(label="Segment One",command=segmentation.singleSegmentation)
-		segmentLung.add_command(label="Segment Directory & Save",command=segmentation.multipleSegmentation)
+		self.menubar.add_cascade(label="Segment Lung", menu=segmentLung) # Add segmentation tab
+		segmentLung.add_command(label="Segment One",command=segmentation.singleSegmentation) # Segment one image
+		segmentLung.add_command(label="Segment Directory & Save",command=segmentation.multipleSegmentation) # Segment multiple images
 
 		# Exit menu
 		exitMenu = tk.Menu(self.menubar,tearoff=0) #Add exit to menubar

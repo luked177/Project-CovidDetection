@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 
 import segmentation
 
-
+#Taken from Colab, needed for processing user scans for predictions 
 def read_nifti_file(filepath):
     """Read and load volume"""
     # Read file
@@ -67,40 +67,28 @@ def process_scan(path):
     # Resize width, height and depth
     volume = resize_volume(volume)
     return volume
-
-def userFile():
-    print("User Inserts File")
-    #	file = filedialog.askopenfilename() #Ask for a file
-	#	print(file)
-    # Allow user to insert a Nifti Image
-
-#Segment the userFile
+# End of Colab code
 
 def prediction():
     print("Prediction")
-    model = tf.keras.models.load_model('ModelSaved')
-    model.load_weights("ModelWeights\\CovidWeights.h5")
+    model = tf.keras.models.load_model('ModelSaved') #Load the 3D CNN
+    model.load_weights("ModelWeights\\CovidWeights.h5")#Load the best performing weights
 
-    predictScan = filedialog.askopenfilename()
-    segmentation.segmentationForPredict(predictScan)
+    predictScan = filedialog.askopenfilename()# Get the scan from the user
+    segmentation.segmentationForPredict(predictScan)# Segment the scan
     path = 'segmentedSlice.nii.gz'
     predictScan = process_scan(path)
 
-    sliceImg = predictScan[:,:,32]
+    sliceImg = predictScan[:,:,32]# Get middle slice to display during prediciton
 
     prediction = model.predict(np.expand_dims(predictScan, axis=0))
     scores = [1 - prediction[0], prediction[0]]
 
     class_names = ["non-infected", "infected"]
-    for score, name in zip(scores, class_names):
-        print(
-            "This model is %.2f percent confident that CT scan is %s"
-            % ((100 * score), name)
-        )
 
     plt.imshow(sliceImg, cmap='gray')
     plt.title("This model is %.2f percent confident that CT scan is %s \n This model is %.2f percent confident that CT scan is %s" % ((100 * scores[0], class_names[0],100 * scores[1], class_names[1])))
-    plt.show()
+    plt.show()# Output prediction as a title of a plot displaying a slice of the processed image
 
 def predictionSegmented():
     print("PredictionSegmentation")

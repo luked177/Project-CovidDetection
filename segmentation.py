@@ -17,7 +17,7 @@ print("Libraries Imported")
 
 def generate_markers(image):
 	#Creation of the internal Marker
-	marker_internal = image < -400
+	marker_internal = image < -400 #Create a binary image where the only pixel bvalues are -400 or less then the original image.
 	marker_internal = segmentation.clear_border(marker_internal)
 	marker_internal_labels = measure.label(marker_internal)
 	areas = [r.area for r in measure.regionprops(marker_internal_labels)]
@@ -121,30 +121,29 @@ def showSegmentation(sliceNum,testPatientImages,test_patient_internal,test_patie
 	fig.tight_layout()
 	fig.canvas.set_window_title(f'Slice {sliceNum}') 
 	fig.show()
-	#fig.savefig(r'C:\Users\luked\Documents\GitHub\Project-CovidDetection\segmentFigure.png')
 
 def multipleSegmentation():
-	path = filedialog.askdirectory()
+	path = filedialog.askdirectory() # Get user directory containing nifti files
 	lungCTs = os.listdir(path)
 	i = 0
 
-	for filename in lungCTs:
+	for filename in lungCTs:#Loop through every nifti file in directory
 		try:
 			lungCTScan = os.path.join(path, filename)
-			img = nib.load(lungCTScan)
+			img = nib.load(lungCTScan) # Load the scans
 			# GET F DATA
 			data = img.get_fdata()
 
 			shape = data.shape
-			lengthSlices = shape[2]
+			lengthSlices = shape[2] # Get size of depth of nifti image
 
-			x = list(range(0, lengthSlices))
-			y = x[int(len(x) * .3) : int(len(x) * .7)]
+			x = list(range(0, lengthSlices)) #Create a list as long as the depth
+			y = x[int(len(x) * .3) : int(len(x) * .7)] # Create a list getting only the middle 40 percent of the original list. (This stops segmenting slices where lungs are not visisble)
 			yLength = len(y)
 
 			niftiArray = []
 			
-			for j in range(yLength):
+			for j in range(yLength): # Loop for as many iterations as there are useful slices
 				slice_0 = data[:,:,y[j]]
 
 				image = np.stack([slice_0])
@@ -165,19 +164,18 @@ def multipleSegmentation():
 				#Some Testcode:
 				test_segmented, test_lungfilter, test_outline, test_watershed, test_sobel_gradient, test_marker_internal, test_marker_external, test_marker_watershed = seperate_lungs(testPatientImages)
 
-				niftiArray.append(test_segmented)
+				niftiArray.append(test_segmented) #Add segmented nifti slice data to the nifti array. 
 
-			affine = img.affine
-			header = img.header
-			path1 = f"SegmentedNiftiCovid\\segmentedNiftiCovid{i}"
-			#print(path1)
+			affine = img.affine # Get Affine
+			header = img.header # Get header
+			path1 = f"SegmentedNiftiCovid\\segmentedNiftiCovid{i}" #Each iteration the name of saved slice will change to show what iteration it was performed on
 			niftiArray = np.array(niftiArray)
 			niftiArray = niftiArray.transpose((-1, 0, 1))
-			niftiArray = niftiArray.transpose((-1, 0, 1))   
-			savedFile = nib.Nifti1Image(niftiArray, affine, header)
-			savedFile.to_filename(path1 + '.nii.gz')
+			niftiArray = niftiArray.transpose((-1, 0, 1))   #Transpose so height width and depth are in the right order
+			savedFile = nib.Nifti1Image(niftiArray, affine, header) #Create a nifti image based on the nifti array
+			savedFile.to_filename(path1 + '.nii.gz') #Save the file to the path the user specified
 			print("Segmented Lung")
-			i = i + 1
+			i = i + 1 #Increase i
 		except IndexError:
 			print("Index Error")
 			continue
@@ -222,12 +220,12 @@ def singleSegmentation():
 
 		if (j == middleIndex):{
 			showSegmentation(y[j],testPatientImages,test_patient_internal,test_patient_external,test_patient_watershed,test_sobel_gradient,test_watershed,test_outline,test_lungfilter,test_segmented)
-		}
+		}#Show user the segmentation stages
 
 		niftiArray.append(test_segmented)
 
-	msgBox = messagebox.askquestion(title="Save Segmented Nifti?",message="Would you like ti save the segmented nifti file?")
-	if msgBox == 'yes':
+	msgBox = messagebox.askquestion(title="Save Segmented Nifti?",message="Would you like ti save the segmented nifti file?")#Ask user with a question box if they would like to save the segmented slice
+	if msgBox == 'yes':# If answer is yes, save the slice to a pth and name of their choosing
 			affine = img.affine
 			header = img.header
 			path1 = filedialog.askdirectory()
