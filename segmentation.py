@@ -224,8 +224,8 @@ def singleSegmentation():
 
 		niftiArray.append(test_segmented)
 
-	msgBox = messagebox.askquestion(title="Save Segmented Nifti?",message="Would you like ti save the segmented nifti file?")#Ask user with a question box if they would like to save the segmented slice
-	if msgBox == 'yes':# If answer is yes, save the slice to a pth and name of their choosing
+	msgBox = messagebox.askquestion(title="Save Segmented Nifti?",message="Would you like to save the segmented nifti file?")#Ask user with a question box if they would like to save the segmented slice
+	if msgBox == 'yes':# If answer is yes, save the slice to a path and name of their choosing
 			affine = img.affine
 			header = img.header
 			path1 = filedialog.askdirectory()
